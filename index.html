@@ -5,14 +5,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>老虎机</title>
   <style>
+    html {
+      font-size: 24rem;
+    }
+
     body {
-      background-color: #000;
+      background-color: #ccc;
     }
 
     .wrapper {
-      background-color: #ff6600;
+      background-color: #C0AFA4;
       margin: 10% auto;
       width: 600px;
       height: 300px;
@@ -22,16 +26,49 @@
       width: 200px;
       height: 300px;
       float: left;
+      position: relative;
+      overflow: hidden;
+    }
+
+    ul {
+      /* position: relative; */
+      position: absolute;
+      top: 0;
+      left: 0;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .block {
+      text-align: center;
+      box-sizing: border-box;
+      width: 200px;
+      height: 300px;
+      font-size: 0.4rem;
+      border: 1px solid #fff;
+      background-color: #666;
     }
   </style>
 </head>
 
 <body>
   <div class="wrapper">
-    <div class="slot">1</div>
-    <div class="slot">2</div>
-    <div class="slot">3</div>
+    <div class="slot">
+      <ul>
+      </ul>
+    </div>
+    <div class="slot">
+      <ul></ul>
+    </div>
+    <div class="slot">
+      <ul></ul>
+    </div>
+    <button class="startBtn">开始</button>
+    <button class="stopBtn">结束</button>
+
   </div>
+  <script src='./stripe.js'></script>
   <script src='./game.js'></script>
 </body>
 
