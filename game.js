@@ -1,7 +1,7 @@
 // 闭区间
 const log = console.log
 function randBetween(min, max) {
-
+  return min + Math.floor(Math.random() * (max - min + 1))
 }
 
 
@@ -25,18 +25,18 @@ function setTop(el, top) {
   el.style.top = top + 'px'
 }
 
-function oneLoop(ul) {
-  let speed = -1
-  let fps = 60
-  setTimeout(function () {
-    // log('loop')
-    // log(ul.style.top)
-    // ul.style.top = '-100px'
-    let top = getTop(ul)
-    setTop(ul, top + speed)
-    oneLoop(ul)
-  }, 1000 / fps)
-}
+// function oneLoop(ul) {
+//   let speed = -1
+//   let fps = 60
+//   setTimeout(function () {
+//     // log('loop')
+//     // log(ul.style.top)
+//     // ul.style.top = '-100px'
+//     let top = getTop(ul)
+//     setTop(ul, top + speed)
+//     oneLoop(ul)
+//   }, 1000 / fps)
+// }
 
 function registBtn(strips) {
   const startBtn = document.querySelector('.startBtn')
@@ -44,8 +44,9 @@ function registBtn(strips) {
   startBtn.addEventListener('click', function () {
     log('start')
     for (let i = 0; i < strips.length; i++) {
-      strips[i].start()
-      // strips[i].setAcc(-0.04)
+      setTimeout(function () {
+        strips[i].start()
+      }, i * 500);
     }
     // strip.start()
     // strip.setAcc(-0.03)
@@ -55,29 +56,51 @@ function registBtn(strips) {
     log('stop')
     for (let i = 0; i < strips.length; i++) {
       setTimeout(function () {
-        strips[i].setAcc(0.02)
-      }, i * 2000);
+        strips[i].setAcc(0.1)
+      }, i * 1000);
     }
   }, false)
 }
 
 function __main() {
   log('ready')
-  let slots = document.querySelectorAll('.slot')
-  let firstSlot = slots[0]
-  let stripe = firstSlot.children[0]
+  let slots = document.querySelectorAll('ul')
+  // let firstSlot = slots[0]
+  // let stripe = firstSlot.children[0]
   window.fps = 60
-
-  let s1 = Stripe.new(stripe, '1234567'.split(''), 0, -2.1, -0.02 * 5)
-  // s1.start()
-  let s2 = Stripe.new(slots[1].children[0], '1234567'.split(''), 0, -3, -0.01 * 5)
-  // s2.start()
-  let s3 = Stripe.new(slots[2].children[0], '1234567'.split(''), 0, -5, -0.015 * 5)
-  // s3.move()
-  // setTimeout(function () {
-  //   s3.start()
-  // }, 3000)
-  const stripes = [s1, s2, s3];
+  let options = [
+    {
+      dom: slots[0],
+      contents: '1234567'.split(''),
+      speed: -5.1,
+      acc: -0.1,
+      stopIndex: 0,
+      endCallBack: () => {
+        log('ended')
+      }
+    },
+    {
+      dom: slots[1],
+      contents: '1234567'.split(''),
+      speed: -5.1,
+      acc: -0.1,
+      stopIndex: 0,
+      endCallBack: () => {
+        log('ended')
+      }
+    },
+    {
+      dom: slots[2],
+      contents: '1234567'.split(''),
+      speed: -5.1,
+      acc: -0.1,
+      stopIndex: 0,
+      endCallBack: () => {
+        log('ended')
+      }
+    },
+  ]
+  const stripes = options.map((option) => (Stripe.new(option)))
   registBtn(stripes)
 }
 

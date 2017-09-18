@@ -1,26 +1,47 @@
 class Stripe {
-  constructor(dom, contents, offsetY, speed, acc) {
-    this.dom = dom
-    this.contents = contents
-    this.offsetY = offsetY
+  constructor(settingObj, dom, contents, offsetY, speed, acc) {
+    let defaultSetting = {
+      // contents:[1,2,3,4,5,6,7],
+      offsetY: 0,
+      speed: 0,
+      acc: -0.2,
+      maxSpeed: -20,
+      minSpeed: -5,
+    };
+    let setting = Object.assign({}, defaultSetting, settingObj)
+    log('setting', setting)
+    for (let itemKey in setting) {
+      if (Object.prototype.hasOwnProperty.call(setting, itemKey)) {
+        this[itemKey] = setting[itemKey]
+      }
+    }
+    // this.dom = dom
+    // this.contents = contents
+    // this.offsetY = offsetY
     this.y = 0
-    this.speed = speed
-    this.originSpeed = speed
-    this.acc = acc
-    this.originAcc = acc
-
+    this.originSpeed = this.speed
+    this.originAcc = this.acc
     this.blockHeight = 300
-    this.height = this.blockHeight * this.contents.length
 
+    this.height = this.blockHeight * this.contents.length
     // this.isMoveing = false
-    this.maxSpeed = -20
+    // this.maxSpeed = -20
+    // this.minSpeed = -5
+
     this.over = true
+
     this.initDom()
     // this.move()
   }
+
+
   static new(dom, contents, y, speed, acc) {
     return new this(dom, contents, y, speed, acc)
   }
+  setTop(top) {
+    this.dom.style.top = top + 'px'
+  }
+
   initDom() {
     let blocks = []
     for (let i = 0; i < this.contents.length; i += 1) {
@@ -34,15 +55,9 @@ class Stripe {
   setSpeed(speed) {
     this.speed = speed
   }
-  update() {
 
-  }
-
-  stop() {
-    // this.isMoveing = false
-  }
-  stopAt(index) {
-    this.endIndex = index
+  setStopIndex(index) {
+    this.stopIndex = index
   }
   start() {
     // this.isMoveing = true
@@ -59,41 +74,39 @@ class Stripe {
     this.acc = acc
   }
   frame() {
-    // if (this.isMoveing) {
     this.speed += this.acc
 
-    //加速到最大速度后匀速运行
+    //加速到最大速度后减速运行
     if (this.speed <= this.maxSpeed) {
       this.speed = this.maxSpeed
+      this.acc = -this.acc
     }
 
     // 速度小到一定程度时,保持匀速,滑到目标格子, 再停下
-    if (this.speed >= -2) {
-      this.speed = -2
+    if (this.speed >= this.minSpeed) {
+      this.speed = this.minSpeed
       this.acc = 0
-      let stopIndex = 1
-      let endY = -stopIndex * this.blockHeight;
-      log('this.y =', this.y)
+      let endY = -this.stopIndex * this.blockHeight;
       if ((this.y > endY + this.speed) && (this.y < endY - this.speed)) {
         this.speed = 0
         this.y = endY
         this.over = true
+        if (typeof this.endCallBack === 'function') {
+          this.endCallBack()
+        }
       }
     }
     // 停止
     if (this.speed >= 0) {
       this.speed = 0
-
     }
     this.y += this.speed
-
 
     // 切换底端 形成循环
     if (this.speed < 0 && -this.y >= this.height) {
       this.y = 0
     }
-    setTop(this.dom, this.y + this.offsetY)
-    // }
+    this.setTop(this.y + this.offsetY)
   }
 
   move() {
