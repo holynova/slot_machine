@@ -5,8 +5,8 @@ class Stripe {
       offsetY: 0,
       speed: 0,
       acc: -0.2,
-      maxSpeed: -20,
-      minSpeed: -5,
+      maxSpeed: -30,
+      // minSpeed: -5,
     };
     let setting = Object.assign({}, defaultSetting, settingObj)
     log('setting', setting)
@@ -26,7 +26,7 @@ class Stripe {
     this.height = this.blockHeight * this.contents.length
     // this.isMoveing = false
     // this.maxSpeed = -20
-    // this.minSpeed = -5
+    this.minSpeed = this.originSpeed
 
     this.over = true
 
