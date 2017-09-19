@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>slot machine</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+    }
+
+    body {
+      background-color: #666;
+    }
+
+    .wrapper {
+      margin: 0 auto;
+    }
+
+    .box {
+      width: 310px;
+      overflow: auto;
+      /* border: 1px solid #000; */
+      margin: 3rem auto;
+      background: #9090AD;
+    }
+
+    .slot {
+      width: 100px;
+      height: 160px;
+      float: left;
+      border-right: 5px solid #000;
+    }
+
+    .slot:last-of-type {
+      border: none;
+    }
+
+    .stripe {
+      width: 100px;
+      height: 160px;
+      background: url('/images/stripe.png') repeat-y;
+    }
+  </style>
+  <script type="text/javascript" src="js/jquery-1.7.2-min.js"></script>
+  <!-- <script type="text/javascript" src="js/easing.js"></script> -->
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="box">
+      <div class="slot">
+        <div class="stripe"></div>
+      </div>
+      <div class="slot">
+        <div class="stripe"></div>
+      </div>
+      <div class="slot">
+        <div class="stripe"></div>
+      </div>
+    </div>
+    <input type="button" class="btnStart" value="开始">
+  </div>
+  <script>
+    const log = console.log
+    $(function () {
+      // 前开后闭区间
+      function randBetween(min = 0, max = 9) {
+        return min + Math.floor(Math.random() * (max - min))
+      }
+      function getRandResult() {
+        let len = $('.stripe').length
+        let results = []
+        for (let i = 0; i < len; i++) {
+          results.push(randBetween(0, cellNum))
+        }
+        return results;
+      }
+      function backToOrigin() {
+        $('.stripe').css('backgroundPositionY', 0)
+      }
+      function roll(results) {
+        $('.stripe').each(function (index) {
+          let $stripe = $(this)
+          setTimeout(function () {
+            $stripe.animate({
+              backgroundPositionY: -cellHeight * (cellNum * 10 - results[index])
+            }, {
+                duration: 3000 + 500 * index,
+                complete: function () {
+                  if (index === $('.stripe').length - 1) {
+                    running = false
+                  }
+                }
+              })
+          }, index * 300)
+        })
+      }
+      //-----------------------------------------
+      let cellHeight = 160
+      let cellNum = 3
+      let running = false
+
+      $('.btnStart').click(function () {
+        if (!running) {
+          running = true
+          // 产生数字
+          let results = getRandResult()
+          log(results)
+          // 回到原位置
+          backToOrigin()
+          // 开始滚动
+          roll(results)
+        }
+
+
+      })
+      //-----------------------------------------
+
+
+    })
+  </script>
+</body>
+
+</html>
